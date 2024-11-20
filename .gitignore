@@ -1,3 +1,6 @@
 pgadmin
 postgres
 node_modules
+
+combined.log
+error.log
