@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { Pool } from "pg";
+import logger from "./logger";
 
 const app = express();
 
@@ -13,6 +14,32 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use((req, res, next) => {
+    const start = Date.now();
+
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        const logMessage = `
+            Request ID: ${Date.now() || 'N/A'}
+            Method: ${req.method}
+            URL: ${req.originalUrl}
+            Route: ${req.route ? req.route.path : 'N/A'}
+            IP: ${req.ip}
+            Date: ${new Date()}
+            User-Agent: ${req.get('User-Agent')}
+            Content-Type: ${req.get('Content-Type')}
+            Content-Length: ${req.get('Content-Length')}
+            Authorization: ${req.get('Authorization')}
+            Query Params: ${JSON.stringify(req.query)}
+            Body Params: ${JSON.stringify(req.body)}
+            Status: ${res.statusCode}
+            Response Time: ${duration}ms
+        `;
+        logger.info(logMessage);
+    });
+
+    next();
+});
 
 const pgPool = new Pool({
     host: 'localhost',

@@ -17,7 +17,8 @@
     "express": "^4.21.1",
     "morgan": "^1.10.0",
     "mysql2": "^3.11.4",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
